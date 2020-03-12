@@ -5,28 +5,20 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @Entity
+public class Teacher {
 
-public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    private double credit;
+    private int optional_num;
 
-    private int weight;
-
-    @OneToMany(mappedBy = "course")
-    private List<Elective> electives;
-
-    public Course(String name, double credit) {
-        this.name = name;
-        this.credit = credit;
-    }
+    @OneToMany(mappedBy = "teacher")
+    private List<Student> students;
 }

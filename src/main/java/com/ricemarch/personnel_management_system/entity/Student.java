@@ -20,17 +20,20 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<Elective> electives;
 
+    @ManyToOne
+    private Teacher teacher;
+
     @Column(columnDefinition = "timestamp default current_timestamp",
             insertable = false,
             updatable = false)
     private LocalDateTime insertTime;
-    @Column(columnDefinition = "timestamp default current_timestamp "+
+    @Column(columnDefinition = "timestamp default current_timestamp " +
             "on update current_timestamp",
             insertable = false,
             updatable = false)
     private LocalDateTime updateTime;
 
-    public Student(int student_number,String name) {
+    public Student(int student_number, String name) {
         this.id = student_number;
         this.name = name;
     }
