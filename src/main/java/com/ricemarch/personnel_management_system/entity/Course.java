@@ -20,10 +20,15 @@ public class Course {
 
     private double credit;
 
+    private double lowsetSorce;
+
     private int weight;
 
     @OneToMany(mappedBy = "course")
     private List<Elective> electives;
+
+    @OneToOne
+    private Teacher teacher;
 
     public Course(String name, double credit) {
         this.name = name;

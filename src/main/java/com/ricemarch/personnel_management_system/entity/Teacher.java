@@ -17,8 +17,13 @@ public class Teacher {
 
     private String name;
 
-    private int optional_num;
+    private int optional_num;//设置实际指导人数
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> students;
+
+    public Teacher(String name,int optional_num) {
+        this.name = name;
+        this.optional_num = optional_num;
+    }
 }

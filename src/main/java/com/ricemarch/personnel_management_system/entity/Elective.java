@@ -9,6 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 public class Elective {
+    //学生对应选课表
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
