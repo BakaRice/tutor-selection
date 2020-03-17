@@ -9,7 +9,7 @@
 学生可以对心仪导师进行选择。
 
 ### 实体类设计
-![DataBaseDesign](https://github.com/BakaRice/PersonnelManagementSystem/docs/database_design.png)
+![DataBaseDesign](./docs/database_design.png)
 
 ### 时间轴
 `~2020/03/11`:  
