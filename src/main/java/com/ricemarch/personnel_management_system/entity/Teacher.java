@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,6 +22,16 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> students;
+
+    @Column(columnDefinition = "timestamp default current_timestamp",
+            insertable = false,
+            updatable = false)
+    private LocalDateTime insertTime;
+    @Column(columnDefinition = "timestamp default current_timestamp " +
+            "on update current_timestamp",
+            insertable = false,
+            updatable = false)
+    private LocalDateTime updateTime;
 
     public Teacher(String name,int optional_num) {
         this.name = name;
