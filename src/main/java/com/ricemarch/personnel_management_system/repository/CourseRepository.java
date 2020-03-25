@@ -1,6 +1,8 @@
 package com.ricemarch.personnel_management_system.repository;
 
 import com.ricemarch.personnel_management_system.entity.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,7 @@ public interface CourseRepository extends BaseRepository<Course, Integer> {
 
     //查出指定老师id 的所有课程 要用 IN 不能用 =
     @Query("select c from Course c where c.teacher.id=:tid")
-    List<Course> list(@Param("tid") int tid);
+    Page<Course> list(@Param("tid") int tid, Pageable pageable);
 
     @Modifying
     @Query("delete from Course  c where  c.id=:course_id")
@@ -35,4 +37,5 @@ public interface CourseRepository extends BaseRepository<Course, Integer> {
             @Param("lowestScore") double lowestScore,
             @Param("weight") int weight
     );
+
 }

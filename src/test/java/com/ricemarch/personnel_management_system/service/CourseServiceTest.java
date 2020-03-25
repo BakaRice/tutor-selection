@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,9 +51,10 @@ public class CourseServiceTest {
 
     @Test
     public void test_list_course() {
-        for (Course course : courseService.list(1)) {
-            log.debug("{}", course.getName());
-        }
+//        for (Course course : courseService.list(1)) {
+//            log.debug("{}", course.getName());
+//        }
+        courseService.list(1, PageRequest.of(0, 10)).toString();
     }
 
     @Test

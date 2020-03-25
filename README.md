@@ -10,6 +10,10 @@
 
 ### 实体类设计
 ![DataBaseDesign](./docs/database_design.png)
+### 接口
+#### course-controller
+![CourseController](./docs/CourseController.png)
+---
 
 ### 时间轴
 `~2020/03/11`:  
@@ -31,5 +35,6 @@
 
 `~2020/03/25`
 - 添加自定义异常 用于处理插入时的外键查找不存在，将service层异常抛至controller层处理。
+- CourseController <KBD>ADD</KBD> <KBD>DELETE</KBD> <KBD>PATCH</KBD> <KBD>GET</KBD> <KBD>POST</KBD> 
 
 感谢阅读这份文档。

@@ -1,5 +1,7 @@
 package com.ricemarch.personnel_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +27,11 @@ public class Course {
 
     private int weight;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
     private List<Elective> electives;
 
+    @JsonIgnore
     @OneToOne
     private Teacher teacher;
 
