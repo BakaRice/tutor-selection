@@ -7,17 +7,15 @@ import java.util.List;
 
 public interface ICourseService {
 
-    public Course add(Course course);//添加课程信息
+    public Course add(Course course,int teacher_id);//添加课程信息，无法找到teacher_id时会抛出异常
 
-    public List<Student> add(int course_id, List<Student> students);//为某一课程添加学生
+    public int remove(int course_id);//删除某个课程
 
-    public Course remove(int course_id);//删除某个课程
+    public int update(int course_id, double LowestScore, int weight);//修改最低分要求和权重
 
-    public Course update(int course_id, double LowestScore, double weight);//修改最低分要求和权重
+    public int update(int course_id, String name, double credit);//修改课程名和学分
 
-    public Course update(int course_id, String name, double credit);//修改课程名和学分
-
-    public Course list(int teacher_id);//列出教师所有课程
+    public List<Course> list(int teacher_id);//列出教师所有课程
 
     public Course get(int course_id);
 

@@ -18,4 +18,12 @@ public class RepositoryTest {
         courseRepo.list(1)
                 .forEach(u -> log.debug(u.getName() + "\\" + u.getCredit()));
     }
+
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    public void test_update_course() {
+        log.debug("{}", courseRepo.update(1, 2.3, "update测试"));
+        log.debug("{}",courseRepo.update(2, 60, 5));
+    }
 }
