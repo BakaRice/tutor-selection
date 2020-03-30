@@ -13,6 +13,10 @@
 ### 接口
 #### course-controller
 ![CourseController](./docs/CourseController.png)
+
+###计算方式
+加权平均成绩的计算，每个课程的权重乘以成绩求值，后进行排序得到最终学生名单  
+$$xavg=\frac{ x1\cdot w1+x2\cdot w2+x3\cdot w3+...+xn\cdot wn}{w1+w2+w3+...+wn}$$
 ---
 
 ### 时间轴
@@ -36,5 +40,5 @@
 `~2020/03/25`
 - 添加自定义异常 用于处理插入时的外键查找不存在，将service层异常抛至controller层处理。
 - CourseController <KBD>ADD</KBD> <KBD>DELETE</KBD> <KBD>PATCH</KBD> <KBD>GET</KBD> <KBD>POST</KBD> 
-
+- 添加老师的内定学生
 感谢阅读这份文档。

@@ -1,5 +1,6 @@
 package com.ricemarch.personnel_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +11,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties({"electives", "teacher"})
 public class Student {
 
     @Id
     private int id;
 
     private String name;
+
 
     @OneToMany(mappedBy = "student")
     private List<Elective> electives;

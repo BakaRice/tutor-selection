@@ -1,18 +1,25 @@
 package com.ricemarch.personnel_management_system.service;
 
-import com.ricemarch.personnel_management_system.entity.Course;
-import com.ricemarch.personnel_management_system.entity.Student;
-
-import java.util.List;
+import com.ricemarch.personnel_management_system.entity.Teacher;
 
 public interface ITeacherService {
-    //教师操作services
-    /*
-    查询自己教授的课程，查询自己的学生。
+    /**
+     * 教师 人数信息修改
+     * @param teacher_id
+     * @param range
+     * @param optional_num
+     * @return
      */
-    public List<Student> listStudent();
+    public Teacher update(int teacher_id, int range, int optional_num);
 
-    public List<Course> listCourse();
 
+    /**
+     * 教师 自身信息修改
+     * @param teacher_id
+     * @param name
+     * @param introduction
+     * @return
+     */
+    public Teacher update(int teacher_id,String name,String introduction);
 
 }

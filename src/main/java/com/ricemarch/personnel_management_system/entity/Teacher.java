@@ -18,7 +18,11 @@ public class Teacher {
 
     private String name;
 
+    private String introduction;
+
     private int optional_num;//设置实际指导人数
+
+    private int ranges;//设置可以被选的范围
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> students;

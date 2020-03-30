@@ -6,16 +6,12 @@ import com.ricemarch.personnel_management_system.exception.CustomException;
 import com.ricemarch.personnel_management_system.repository.CourseRepository;
 import com.ricemarch.personnel_management_system.repository.TeacherRepository;
 import com.ricemarch.personnel_management_system.service.ICourseService;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
