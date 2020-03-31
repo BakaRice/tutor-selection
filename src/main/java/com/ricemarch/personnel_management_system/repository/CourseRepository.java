@@ -18,9 +18,10 @@ public interface CourseRepository extends BaseRepository<Course, Integer> {
     @Query("select c from Course c where c.teacher.id=:tid")
     Page<Course> list(@Param("tid") int tid, Pageable pageable);
 
-    @Modifying
-    @Query("delete from Course  c where  c.id=:course_id")
-    public int remove(@Param("course_id") int course_id);
+//    不能执行 联机操作 不如直接使用原生 deleteById
+//    @Modifying
+//    @Query("delete from Course  c where  c.id=:course_id ")
+//    public int remove(@Param("course_id") int course_id);
 
     @Modifying
     @Query("UPDATE Course  c set c.credit=:credit,c.name=:cname where c.id=:cid")

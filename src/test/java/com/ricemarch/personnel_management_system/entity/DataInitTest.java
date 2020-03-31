@@ -48,16 +48,20 @@ public class DataInitTest {
         Teacher teacher2 = new Teacher("Lili", 9);
         teacherRepo.save(teacher);
         teacherRepo.save(teacher2);
+        teacherRepo.refresh(teacher);
+        teacherRepo.refresh(teacher2);
     }
 
     @Test
     public void test_course_rel_init() {
-        Course course = manager.find(Course.class, 3);
-        Course course1 = manager.find(Course.class, 4);
+        Course course = manager.find(Course.class, 1);
+        Course course1 = manager.find(Course.class, 2);
         Teacher teacher = manager.find(Teacher.class, 1);
+//        teacherRepo.refresh(teacher);
 //        Teacher teacher1 = manager.find(Teacher.class, 2);
         course.setTeacher(teacher);
         course1.setTeacher(teacher);
+        manager.persist(course);
     }
 
     @Test
@@ -68,6 +72,7 @@ public class DataInitTest {
         elective.setGrade("A");
         elective.setStudent(s);
         elective.setCourse(c);
+        elective.setStudent(studentRepo.findById(2017214317).orElse(null));
         manager.persist(elective);
     }
 

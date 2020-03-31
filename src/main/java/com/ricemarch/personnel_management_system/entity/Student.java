@@ -3,6 +3,7 @@ package com.ricemarch.personnel_management_system.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class Student {
     private String name;
 
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",cascade = {CascadeType.REMOVE,CascadeType.MERGE})
     private List<Elective> electives;
 
     @ManyToOne

@@ -15,19 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class RepositoryTest {
     @Autowired
     CourseRepository courseRepo;
+    ElectiveRepository electiveRepository;
+//    @Test
+//    public void test_list_course() {
+////        courseRepo.list(1,)
+////                .forEach(u -> log.debug(u.getName() + "\\" + u.getCredit()));
+//        courseRepo.list(1, PageRequest.of(0, 10)).toString();
+//    }
+//
+//    @Test
+//    @Transactional
+//    @Rollback(value = false)
+//    public void test_update_course() {
+//        log.debug("{}", courseRepo.update(1, 2.3, "update测试"));
+//        log.debug("{}",courseRepo.update(2, 60, 5));
+//    }
 
     @Test
-    public void test_list_course() {
-//        courseRepo.list(1,)
-//                .forEach(u -> log.debug(u.getName() + "\\" + u.getCredit()));
-        courseRepo.list(1, PageRequest.of(0, 10)).toString();
-    }
-
-    @Test
-    @Transactional
-    @Rollback(value = false)
-    public void test_update_course() {
-        log.debug("{}", courseRepo.update(1, 2.3, "update测试"));
-        log.debug("{}",courseRepo.update(2, 60, 5));
+    public void test_delete_elective() {
+//        electiveRepository.deleteById(1);
+        courseRepo.deleteById(0);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class Course {
     private int weight;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course",cascade = {CascadeType.REMOVE,CascadeType.MERGE})
     private List<Elective> electives;
 
     @JsonIgnore

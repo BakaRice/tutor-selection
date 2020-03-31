@@ -2,6 +2,7 @@ package com.ricemarch.personnel_management_system.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class Elective {
             updatable = false)
     private LocalDateTime insertTime;
     @Column(columnDefinition = "timestamp default current_timestamp " +
-            "on update current_timestamp",
+            "on update current_timestamp ",
             insertable = false,
             updatable = false)
     private LocalDateTime updateTime;
