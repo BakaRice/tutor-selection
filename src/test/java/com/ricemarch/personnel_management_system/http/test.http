@@ -1,0 +1,24 @@
+
+###
+GET http://localhost:8081/api/teachers/w/courses/
+
+###
+DELETE http://localhost:8081/api/courses/10
+
+###
+PATCH http://localhost:8081/api/teachers/1/students/2017214317/
+
+###
+GET http://localhost:8081/api/courses/
+
+
+###
+
+DELETE  http://localhost:8081/api/teachers/courses/1
+
+###
+
+PATCH http://localhost:8081/api/teachers/courses/3/name/iio/credit/12
+
+###
+
