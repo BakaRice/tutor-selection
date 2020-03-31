@@ -12,7 +12,7 @@
 ![DataBaseDesign](./docs/database_design.png)
 ### 接口
 #### course-controller
-![CourseController](./docs/CourseController.png)
+![CourseController](./docs/TeacherController.png)
 
 ###计算方式
 加权平均成绩的计算，每个课程的权重乘以成绩求值，后进行排序得到最终学生名单  
