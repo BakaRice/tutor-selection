@@ -55,4 +55,12 @@ $$xavg=\frac{ x1\cdot w1+x2\cdot w2+x3\cdot w3+...+xn\cdot wn}{w1+w2+w3+...+wn}$
 `~2020/03/31`
 - 优化Sevice结构，重构为student与teacher服务。
 
+
+`~2020/04/04`
+- 添加   
+登陆拦截器(`LoginInterceptor`),    
+初始化用户组件(`InitComponent`),    
+加密解密组件(`EncryptComponent`),  
+获取HeaderAttribute组件(`RequestComponent`)
+- swagger `authorization` 配置 ,便于测试需要登陆的接口
 感谢阅读这份文档。
