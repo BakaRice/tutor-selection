@@ -14,31 +14,32 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    private String name;
+    @OneToOne
+    @MapsId
+    private User user;
 
     private String introduction;
 
-    private int optional_num;//设置实际指导人数
+    private Integer optional_num;//设置实际指导人数
 
-    private int ranges;//设置可以被选的范围
+    private Integer ranges;//设置可以被选的范围
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> students;
+
 
     @Column(columnDefinition = "timestamp default current_timestamp",
             insertable = false,
             updatable = false)
     private LocalDateTime insertTime;
-    @Column(columnDefinition = "timestamp default current_timestamp " +
-            "on update current_timestamp",
-            insertable = false,
-            updatable = false)
-    private LocalDateTime updateTime;
 
-    public Teacher(String name,int optional_num) {
-        this.name = name;
+    public Teacher(String name, int optional_num) {
         this.optional_num = optional_num;
     }
+
+//    public Teacher(int uid) {
+//        this.id = uid;
+//    }
 }

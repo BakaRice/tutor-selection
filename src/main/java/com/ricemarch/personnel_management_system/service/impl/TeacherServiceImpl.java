@@ -3,10 +3,12 @@ package com.ricemarch.personnel_management_system.service.impl;
 import com.ricemarch.personnel_management_system.entity.Course;
 import com.ricemarch.personnel_management_system.entity.Student;
 import com.ricemarch.personnel_management_system.entity.Teacher;
+import com.ricemarch.personnel_management_system.entity.User;
 import com.ricemarch.personnel_management_system.exception.CustomException;
 import com.ricemarch.personnel_management_system.repository.CourseRepository;
 import com.ricemarch.personnel_management_system.repository.StudentRepository;
 import com.ricemarch.personnel_management_system.repository.TeacherRepository;
+import com.ricemarch.personnel_management_system.repository.UserRepository;
 import com.ricemarch.personnel_management_system.service.ITeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,14 @@ public class TeacherServiceImpl implements ITeacherService {
     @Autowired
     StudentRepository studentRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     @Transactional
     public Course add(Course course, int teacher_id) {
         if (course.getLowsetSorce() == 0) course.setLowsetSorce(60);
-         //service层异常到controller层进行处理
+        //service层异常到controller层进行处理
         Teacher teacher = teacherRepository.findById(teacher_id)
                 .orElseThrow(() -> new CustomException("Failed to add course, could not find the specified teacher id:" + teacher_id));
         course.setTeacher(teacher);
@@ -46,8 +51,8 @@ public class TeacherServiceImpl implements ITeacherService {
     public void remove(int course_id) {
         try {
             courseRepository.deleteById(course_id);
-        }catch (Exception e){
-            throw new CustomException("Failed to delete Course,"+e.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("Failed to delete Course," + e.getMessage());
         }
     }
 
@@ -95,9 +100,12 @@ public class TeacherServiceImpl implements ITeacherService {
     public Teacher update(int teacher_id, String name, String introduction) {
         Teacher teacher = teacherRepository.findById(teacher_id)
                 .orElseThrow(() -> new CustomException("Failed to update teacher, could not find the specified teacher id:" + teacher_id));
-        teacher.setName(name);
+        User user = userRepository.find(teacher_id);
+        user.setName(name);
+//        teacher.setName(name);
         teacher.setIntroduction(introduction);
         teacherRepository.save(teacher);
+        userRepository.save(user);
         return teacher;
     }
 

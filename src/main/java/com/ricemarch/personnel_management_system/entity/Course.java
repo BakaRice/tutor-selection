@@ -2,6 +2,7 @@ package com.ricemarch.personnel_management_system.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
 
@@ -26,13 +27,13 @@ public class Course {
 
     private double lowsetSorce;
 
-    private int weight;
+    private Integer weight;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "course",cascade = {CascadeType.REMOVE,CascadeType.MERGE})
     private List<Elective> electives;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     private Teacher teacher;
 

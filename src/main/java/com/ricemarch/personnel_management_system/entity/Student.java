@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,12 +19,16 @@ import java.util.List;
 public class Student {
 
     @Id
-    private int id;
+    private Integer id;
 
-    private String name;
+    @OneToOne//可以用级联
+    @MapsId
+    private User user;
+
+//    private String name;
 
 
-    @OneToMany(mappedBy = "student",cascade = {CascadeType.REMOVE,CascadeType.MERGE})
+    @OneToMany(mappedBy = "student", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Elective> electives;
 
     @ManyToOne
@@ -39,6 +46,6 @@ public class Student {
 
     public Student(int student_number, String name) {
         this.id = student_number;
-        this.name = name;
+//        this.name = name;
     }
 }

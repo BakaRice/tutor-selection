@@ -1,7 +1,10 @@
 package com.ricemarch.personnel_management_system.controller;
 
+import com.ricemarch.personnel_management_system.component.MyToken;
+import com.ricemarch.personnel_management_system.component.RequestComponent;
 import com.ricemarch.personnel_management_system.entity.Course;
 import com.ricemarch.personnel_management_system.entity.Student;
+import com.ricemarch.personnel_management_system.entity.Teacher;
 import com.ricemarch.personnel_management_system.service.impl.TeacherServiceImpl;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +28,21 @@ import java.util.Map;
 public class TeacherController {
 
     @Autowired
+    private RequestComponent requestComponent;
+
+    @Autowired
     TeacherServiceImpl teacherService;
+
+    @GetMapping("welcome")
+    public void getIndex(HttpServletRequest request, @RequestAttribute(MyToken.UID) int uid) {
+        log.debug("{}", (int) request.getAttribute(MyToken.UID));
+        log.debug("{}", uid);
+        log.debug("{}", requestComponent.getUid());
+    }
 
     /**
      * 问题： 没有id校验过程 -1 111 任意数字都可以进入
+     *
      * @param teacher_id
      * @param pageable
      * @return
@@ -48,6 +63,7 @@ public class TeacherController {
 
     /**
      * RequestBody中的course的id属性 与数据库内操作内容无关 数据库默认自增长
+     *
      * @param course
      * @param teacher_id
      * @return
@@ -55,6 +71,7 @@ public class TeacherController {
     @ApiOperation("添加课程，指定关联教师id")
     @PostMapping("courses")
     public Map addCourse(@RequestBody Course course, @RequestParam Integer teacher_id) {
+//        course.setTeacher(new Teacher(requestComponent.getUid()));
         Course add = teacherService.add(course, teacher_id);
         return Map.of("message", "success", "data", add);
     }
