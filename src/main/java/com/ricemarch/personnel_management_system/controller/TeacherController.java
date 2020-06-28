@@ -1,24 +1,22 @@
 package com.ricemarch.personnel_management_system.controller;
 
-import com.ricemarch.personnel_management_system.component.MyToken;
 import com.ricemarch.personnel_management_system.component.RequestComponent;
-import com.ricemarch.personnel_management_system.entity.Course;
-import com.ricemarch.personnel_management_system.entity.Student;
-import com.ricemarch.personnel_management_system.entity.Teacher;
+import com.ricemarch.personnel_management_system.controller.VO.StudentVO;
+import com.ricemarch.personnel_management_system.entity.*;
+import com.ricemarch.personnel_management_system.exception.CustomException;
+import com.ricemarch.personnel_management_system.service.UserService;
+import com.ricemarch.personnel_management_system.service.impl.StudentServiceImpl;
 import com.ricemarch.personnel_management_system.service.impl.TeacherServiceImpl;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -28,30 +26,33 @@ import java.util.Map;
 public class TeacherController {
 
     @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
     private RequestComponent requestComponent;
 
     @Autowired
     TeacherServiceImpl teacherService;
 
-    @GetMapping("welcome")
-    public void getIndex(HttpServletRequest request, @RequestAttribute(MyToken.UID) int uid) {
-        log.debug("{}", (int) request.getAttribute(MyToken.UID));
-        log.debug("{}", uid);
-        log.debug("{}", requestComponent.getUid());
-    }
+    @Autowired
+    StudentServiceImpl studentService;
 
-    /**
-     * 问题： 没有id校验过程 -1 111 任意数字都可以进入
-     *
-     * @param teacher_id
-     * @param pageable
-     * @return
-     */
-    @ApiOperation("查询指定teacher_id老师的所有课程")
-    @GetMapping("{teacher_id}/courses/")
-    public Page listCourseByTeacherId(@PathVariable Integer teacher_id, @PageableDefault(value = 15, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Course> coursePage = teacherService.list(teacher_id, pageable);
-        return coursePage;
+    @Autowired
+    UserService userService;
+//    @GetMapping("welcome")
+//    public void getIndex(HttpServletRequest request, @RequestAttribute(MyToken.UID) int uid) {
+//        log.debug("{}", (int) request.getAttribute(MyToken.UID));
+//        log.debug("{}", uid);
+//        log.debug("{}", requestComponent.getUid());
+//    }
+
+
+    @ApiOperation("查询当前登录老师的所有课程")
+    @GetMapping("/courses")
+    public Map listCourseByTeacherId() {
+        int teahcer_id = requestComponent.getUid();
+        List<Course> courseList = teacherService.list(teahcer_id);
+        return Map.of("size", courseList.size(), "data", courseList);
     }
 
     @ApiOperation("查询指定course_id的课程")
@@ -65,50 +66,132 @@ public class TeacherController {
      * RequestBody中的course的id属性 与数据库内操作内容无关 数据库默认自增长
      *
      * @param course
-     * @param teacher_id
      * @return
      */
-    @ApiOperation("添加课程，指定关联教师id")
-    @PostMapping("courses")
-    public Map addCourse(@RequestBody Course course, @RequestParam Integer teacher_id) {
+    @ApiOperation("为当前登录教师老师添加课程")
+    @PostMapping("course")
+    public Map addCourse(@Valid @RequestBody Course course) {
 //        course.setTeacher(new Teacher(requestComponent.getUid()));
-        Course add = teacherService.add(course, teacher_id);
+//        if (course.getLowsetSorce() == 0) course.setLowsetSorce(60);
+        Course add = teacherService.add(course, requestComponent.getUid());
         return Map.of("message", "success", "data", add);
     }
 
     @ApiOperation("删除课程")
     @DeleteMapping("courses/{course_id}")
+    @Transactional
     public Map deleteCourse(@PathVariable Integer course_id) {
+        //删除原有的所有的选课信息
+        int romveLine = teacherService.removeCourseStudents(course_id);
         teacherService.remove(course_id);
         return Map.of("message", "success");
     }
 
     @ApiOperation("修改指定id课程最低分和权重")
-    @PatchMapping("courses/{course_id}/LowestScore/{LowestScore}/weight/{weight}")
-    public Map updateCourse(@PathVariable Integer course_id, @PathVariable double LowestScore, @PathVariable Integer weight) {
-        int update = teacherService.update(course_id, LowestScore, weight);
-        return Map.of("message", "success", "data", Map.of("updateLine", update));
+    @PatchMapping("courses/setting")
+    @ApiImplicitParam(
+            name = "course",
+            value = "待修改的课程的id、lowestSorce、weight,例:{ \"id\": 1, \"lowsetSorce\": 0, \"weight\": 0 }",
+            required = true)
+    public Map updateCourse(@Valid @RequestBody Course course) {
+
+        try {
+            Integer id = course.getId();
+            double lowsetSorce = course.getLowsetSorce();
+            float weight = course.getWeight();
+            if (id == 0 || lowsetSorce == 0 || weight == 0)
+                throw new CustomException("Incoming attribute is incomplete");
+            int update = teacherService.update(id, lowsetSorce, weight);
+            return Map.of("message", "success", "data", Map.of("updateLine", update));
+        } catch (NullPointerException e) {
+            throw new CustomException("Incoming attribute is incomplete");
+        }
     }
 
     @ApiOperation("修改指定id课程名称和学分")
-    @PatchMapping("courses/{course_id}/name/{name}/credit/{credit}")
-    public Map updateCourse2(@PathVariable Integer course_id, @PathVariable String name, @PathVariable double credit) {
-        int update = teacherService.update(course_id, name, credit);
-        return Map.of("message", "success", "data", Map.of("updateLine", update));
+    @PatchMapping("courses/info")
+    @ApiImplicitParam(
+            name = "course",
+            value = "待修改的课程的id、lowestSorce、weight,例:{ \"id\": 1, \"lowsetSorce\": 0, \"weight\": 0 }",
+            required = true)
+    public Map updateCourse2(@Valid @RequestBody Course course) {
+        try {
+            int cid = course.getId();
+            String name = course.getName();
+            double credit = course.getCredit();
+            if (cid == 0 || name == null || credit == 0) {//不优雅的判空
+                throw new CustomException("Incoming attribute is incomplete");
+            }
+            int update = teacherService.update(cid, name, credit);
+            return Map.of("message", "success", "data", Map.of("updateLine", update));
+        } catch (NullPointerException e) {
+            throw new CustomException("Incoming attribute is incomplete");
+        }
+
+
     }
 
-    @ApiOperation("为指定ID的老师添加指定id的内定学生")
-    @PatchMapping("{teacher_id}/students/{student_id}/")
-    public Student addStudent(@PathVariable Integer student_id, @PathVariable Integer teacher_id) {
-        Student add = teacherService.add(student_id, teacher_id);
+    @ApiOperation("为指定id课程添加学生，会覆盖原有该学生选修此课程的信息")
+    @PostMapping("courses/{course_id}/students")
+    @Transactional
+    public void addStudents(@RequestBody List<StudentVO> students, @PathVariable Integer course_id) {
+        //删除原有的所有的选课信息
+        int romveLine = teacherService.removeCourseStudents(course_id);
+        students.forEach(u -> {
+            Integer stu_num = u.getNumber();
+            User user = userService.getUser(stu_num);
+            Student student = new Student();
+            //如果不存在则创建 存在user 直接get其student
+            if (user == null) {
+                user = new User();
+                user.setName(u.getName());
+                user.setNumber(u.getNumber());
+                user.setRole(User.Role.STUDENT);
+                user.setPassword(encoder.encode(String.valueOf(stu_num)));
+                student.setUser(user);
+                userService.addStudent(user, student);
+            } else
+                student = studentService.get(stu_num);
+            teacherService.addStudent(course_id, student, u.getGrade());
+        });
+    }
+
+    @ApiOperation("为当前登录教师老师添加内定学生")
+    @ApiImplicitParam(name = "student", value = "待添加的内定学生", required = true, dataType = "Student")
+    @PatchMapping("/students")
+    public Student addStudent(@RequestBody Student student) {
+        Student add = teacherService.addStudent(student, requestComponent.getUid());
         return add;
     }
 
-    @ApiOperation("列出指定id老师的所有学生")
-    @GetMapping("{teacher_id}/students/")
-    public Map findAllStudentByTeacherID(@PathVariable Integer teacher_id) {
+    @ApiOperation("列出当前登录老师的所有学生")
+    @GetMapping("/students")
+    public Map findAllStudentByTeacherID() {
+        Integer teacher_id = requestComponent.getUid();
         List<Student> studentList = teacherService.listStudent(teacher_id);
         return Map.of("size", studentList.size(), "data", studentList);
     }
+
+
+    @ApiOperation("列出当前登录老师的个人信息")
+    @GetMapping("/teacher")
+    public Teacher listTeacherInfo() {
+        int teacher_uid = requestComponent.getUid();
+        Teacher teacher = teacherService.getTeacher(teacher_uid);
+        return teacher;
+    }
+
+    @ApiOperation("修改老师信息 只能修改ranges name introduction")
+    @PostMapping("/teahcer")
+    public void updateTeacherInfo(@Valid @RequestBody Teacher update) {
+
+        int teacher_uid = requestComponent.getUid();
+        int ranges = update.getRanges();
+        String introduction = update.getIntroduction();
+        String name = update.getUser().getName();
+        teacherService.update(teacher_uid, ranges);
+        teacherService.update(teacher_uid, name, introduction);
+    }
+
 
 }

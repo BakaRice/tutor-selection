@@ -25,16 +25,8 @@ public class DataInitTest {
     @Autowired
     private StudentRepository studentRepo;
 
-    @Test
-    public void test_student_init() {
-        // 初始学生
-        Student s = new Student(2017214317, "谭文韬");
-        Student s1 = new Student(2017225574, "杨乐佳");
-        studentRepo.save(s);
-        studentRepo.save(s1);
-    }
 
-    @Test
+//    @Test
     public void test_course_init() {
         Course course = new Course("TestCourse3", 3.0);
         Course course2 = new Course("TestCourse4", 3.5);
@@ -42,7 +34,7 @@ public class DataInitTest {
         courseRepo.save(course2);
     }
 
-    @Test
+//    @Test
     public void test_teacher_init() {
         Teacher teacher = new Teacher("WANGBO", 10);
         Teacher teacher2 = new Teacher("Lili", 9);
@@ -52,7 +44,7 @@ public class DataInitTest {
         teacherRepo.refresh(teacher2);
     }
 
-    @Test
+//    @Test
     public void test_course_rel_init() {
         Course course = manager.find(Course.class, 1);
         Course course1 = manager.find(Course.class, 2);
@@ -64,12 +56,12 @@ public class DataInitTest {
         manager.persist(course);
     }
 
-    @Test
+//    @Test
     public void test_rel_init() {
         Student s = manager.find(Student.class, 2017214317);
         Course c = manager.find(Course.class, 1);
         Elective elective = new Elective();
-        elective.setGrade("A");
+        elective.setGrade((float) 80);
         elective.setStudent(s);
         elective.setCourse(c);
         elective.setStudent(studentRepo.findById(2017214317).orElse(null));

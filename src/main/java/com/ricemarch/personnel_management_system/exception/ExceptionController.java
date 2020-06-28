@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Slf4j
+//声明捕获统一的异常处理
 @RestControllerAdvice
 public class ExceptionController {
 
@@ -61,6 +62,7 @@ public class ExceptionController {
     @ExceptionHandler(CustomException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map handleCustomException(CustomException exception) {
+
         return Map.of("message", exception.getMessage());
     }
 

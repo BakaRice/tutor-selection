@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,6 +20,8 @@ public class User {
     }
 
     @Id
+    @ApiModelProperty(hidden = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -30,6 +33,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//只能进行反序列化 json->java object
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ApiModelProperty(hidden = true)
     private Role role;
 

@@ -25,15 +25,24 @@ GET http://localhost:8081/api/teachers/welcome
 Authorization: {{token}}
 
 ###
+PATCH http://localhost:8081/api/teachers/courses/setting
+Authorization: {{token}}
+Content-Type: application/json
 
+{
+"id":1
+}
+
+###
 POST http://localhost:8081/api/login
 Content-Type: application/json
 
 {
-"number":"1001",
-"password":"1001"
+  "number": "1001",
+  "password": "1001"
 }
 
 > {% client.global.set("token",response.headers.valueOf("Authorization")); %}
+
 ###
 

@@ -36,13 +36,16 @@ public class LoginController {
 
     @PostMapping("login")
     public Map login(@RequestBody User login, HttpServletResponse response) {
+        if (login==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
+        if (login.getPassword()==null || login.getNumber()==null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码不能为空");
         User user = Optional.ofNullable(userService.getUser(login.getNumber()))
                 .filter(u -> encoder.matches(login.getPassword(), u.getPassword()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误"));
 
         MyToken token = new MyToken(user.getId(), user.getRole());
         String auth = encrypt.encryptToken(token);
-        response.setHeader(MyToken.AUTHORIZATION, auth);//键值对 不要用硬编码 用常量
+        response.setHeader(MyToken.AUTHORIZATION, auth);//键值对 不要用硬编码 用常量 避免书写错误等情况
         String roleCode = user.getRole() == User.Role.TEACHER ? roleTeacher : roleStudent;
         return Map.of("role", roleCode);
     }

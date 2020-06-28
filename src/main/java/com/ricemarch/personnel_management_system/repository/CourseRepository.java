@@ -18,6 +18,14 @@ public interface CourseRepository extends BaseRepository<Course, Integer> {
     @Query("select c from Course c where c.teacher.id=:tid")
     Page<Course> list(@Param("tid") int tid, Pageable pageable);
 
+    //查出指定老师id 的所有课程 要用 IN 不能用 =
+    @Query("select c from Course c where c.teacher.id=:tid")
+    List<Course> list(@Param("tid") int tid);
+
+    //查出指定老师id 的所有课程 要用 IN 不能用 =
+    @Query("select c from Course c where c.teacher.user.number=:tnumber")
+    List<Course> listByNumber(@Param("tnumber") int tnumber);
+
 //    不能执行 联机操作 不如直接使用原生 deleteById
 //    @Modifying
 //    @Query("delete from Course  c where  c.id=:course_id ")
@@ -36,7 +44,7 @@ public interface CourseRepository extends BaseRepository<Course, Integer> {
     public int update(
             @Param("cid") int cid,
             @Param("lowestScore") double lowestScore,
-            @Param("weight") int weight
+            @Param("weight") float weight
     );
 
 }

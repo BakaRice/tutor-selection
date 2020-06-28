@@ -1,23 +1,173 @@
 # 导师选择系统
 
 ## 关于工程
-- JDK 1.11、Maven 3.2、Mysql8.0
+- JDK 1.11、Maven 3.2、Mysql8.0、swagger 2
 - 使用Spring Boot作为核心框架
 - 包含REST API
 
 系统支持多个导师及学生的双向选择，导师可以设置每一门课程的权重以及最低分限制以达到对学生进行选择的目的。
 学生可以对心仪导师进行选择。
 
-### 实体类设计
-![DataBaseDesign](./docs/database_design.png)
-### 接口
-#### course-controller
-![CourseController](./docs/TeacherController.png)
+### 实体类
 
-###计算方式
-加权平均成绩的计算，每个课程的权重乘以成绩求值，后进行排序得到最终学生名单  
-$$xavg=\frac{ x1\cdot w1+x2\cdot w2+x3\cdot w3+...+xn\cdot wn}{w1+w2+w3+...+wn}$$
+1. User
+
+2. Teacher
+
+3. Student
+
+4. Course
+
+5. Elective
+
+   详见entity包内实体类
+
+### 接口
+
+## [Login Controller] 
+1. **POST**
+
+   /api/login  **用户登录**
+
+    Parameters Example Value:
+
+   ```JSON
+   {
+     "number": 1001,
+     "password": 1001
+   }
+   ```
+
+    Response body：
+
+   ```json
+   {
+     "role": "fbf89a7c09ff46b4"
+   }
+   ```
+
+   Respones Headers:
+
+   ```
+   authorization: /*加密后的role和uid字符串*/
+   ```
+
+
+
+## [Student Controller]
+1. **GET**  查询自己的老师
+   /api/students/teacher
+
+
+2. **GET** 查询所有老师
+   /api/students/teachers
+   
+3. **GET** 选取导师
+   /api/students/teahcers/{tnumber}
+   
+   
+
+## [Teacher Controller]
+1. **POST** 为当前登录教师老师添加课程
+   `/api/teachers/course`
+
+   Parameters Example Value:
+
+  ```json
+  {
+    "credit": 2.5,
+  "lowsetSorce": 60,
+     "name": "NewCourse",
+  "weight": 0.7
+   }
+  ```
+
+   
+
+2. **GET** 查询当前登录老师的所有课程
+   `/api/teachers/courses`
+
+   
+
+3. **GET** 查询指定course_id的课程
+   `/api/teachers/courses/{course_id}`
+
+   
+
+4. **DELETE** 删除课程
+   `/api/teachers/courses/{course_id}`
+
+   
+
+5. **POST** 为指定id课程添加学生，会覆盖原有该学生选修此课程的信息
+   `/api/teachers/courses/{course_id}/students`
+Parameters Example Value:（此处为StudentVO类）
+   
+   ```json
+   [
+     {
+    "grade": 65,
+       "name": "Student_1",
+    "number": 2001
+     },
+     {
+       "grade": 35,
+       "name": "Student_2",
+       "number": 2002
+     }
+   ]
+   ```
+   
+   
+   
+6. **PATCH** 修改指定id课程名称和学分
+   `/api/teachers/courses/info`
+
+   Parameters Example Value:
+   
+   ```json
+{ "id": 1, "name": exampleName, "credit": 3.5 }
+   ```
+
+   
+   
+7. **PATCH** 修改指定id课程最低分和权重
+   `/api/teachers/courses/setting`
+
+   Parameters Example Value:
+
+   ```json
+   { "id": 1, "lowsetSorce": 65, "weight": 0.2 }
+   ```
+
+   
+
+   
+
+8. **GET**  列出当前登录老师的所有学生
+   `/api/teachers/students`
+
+   
+
+
+9. **PATCH** 为当前登录教师老师添加内定学生
+   `/api/teachers/students`
+
+   
+
+10. **GET** 列出当前登录老师的个人信息
+    `/api/teachers/teacher`
+
+    
+
+11. **POST** 修改老师信息
+    `/api/teachers/teahcer`
+    
+    
+
 ---
+
+
 
 ### 疑惑与发现
 1. `hibernate DDL Cascade`  
@@ -63,4 +213,5 @@ $$xavg=\frac{ x1\cdot w1+x2\cdot w2+x3\cdot w3+...+xn\cdot wn}{w1+w2+w3+...+wn}$
 加密解密组件(`EncryptComponent`),  
 获取HeaderAttribute组件(`RequestComponent`)
 - swagger `authorization` 配置 ,便于测试需要登陆的接口
+
 感谢阅读这份文档。
