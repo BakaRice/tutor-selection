@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +16,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-public class Course {
+public class Course implements Serializable {
+    @Transient
+    private static final long serialVersionUID = -8764453879720371516L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -41,7 +45,7 @@ public class Course {
 
     @ApiModelProperty(hidden = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course",cascade = {CascadeType.REMOVE,CascadeType.MERGE})
+    @OneToMany(mappedBy = "course", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private List<Elective> electives;
 
     @ManyToOne

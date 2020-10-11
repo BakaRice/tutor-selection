@@ -8,12 +8,16 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class User {
+public class User implements Serializable {
+
+    @Transient
+    private static final long serialVersionUID = -317192779603378026L;
 
     public enum Role {
         STUDENT, TEACHER

@@ -12,6 +12,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +52,7 @@ public class TeacherController {
 
     @ApiOperation("查询当前登录老师的所有课程")
     @GetMapping("/courses")
+//    @Cacheable(cacheNames = "courseList", key = "#requestComponent.uid")
     public Map listCourseByTeacherId() {
         int teahcer_id = requestComponent.getUid();
         List<Course> courseList = teacherService.list(teahcer_id);
@@ -70,6 +74,8 @@ public class TeacherController {
      */
     @ApiOperation("为当前登录教师老师添加课程")
     @PostMapping("course")
+//    @CachePut(cacheNames = "courseList", key = "123")
+//    @CacheEvict(cacheNames = "courseList", key = "#requestComponent.uid")
     public Map addCourse(@Valid @RequestBody Course course) {
 //        course.setTeacher(new Teacher(requestComponent.getUid()));
 //        if (course.getLowsetSorce() == 0) course.setLowsetSorce(60);
@@ -80,6 +86,7 @@ public class TeacherController {
     @ApiOperation("删除课程")
     @DeleteMapping("courses/{course_id}")
     @Transactional
+    @CacheEvict(cacheNames = "course", key = "#course_id")
     public Map deleteCourse(@PathVariable Integer course_id) {
         //删除原有的所有的选课信息
         int romveLine = teacherService.removeCourseStudents(course_id);

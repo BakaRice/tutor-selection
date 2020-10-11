@@ -6,6 +6,7 @@ import com.ricemarch.personnel_management_system.service.impl.StudentServiceImpl
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,7 @@ public class StudentController {
 
     @ApiOperation("查询自己的老师")
     @GetMapping("/teacher")
+//    @Cacheable(cacheNames = "myTeacher", key = "#requestComponent.uid")
     public Teacher getTeahcer() {
         int uid = requestComponent.getUid();
         Teacher teacher = studentService.getTeacher(uid);

@@ -224,4 +224,11 @@ Parameters Example Value:（此处为StudentVO类）
 获取HeaderAttribute组件(`RequestComponent`)
 - swagger `authorization` 配置 ,便于测试需要登陆的接口
 
+`~2020/10/11`
+- 添加   
+老师课程列表redis缓存(部分)，因为前期的结构设计问题太大！导致很多很多地方甚至无法很好的添加缓存！太失误了！，  
+教师信息redis缓存
+
+**@Cacheable和@CachePut 必须要返回的类型相对应，不然就不行！**
+
 感谢阅读这份文档。

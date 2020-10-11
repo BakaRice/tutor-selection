@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,15 +16,17 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @JsonIgnoreProperties({"courses", "students"})
-public class Teacher {
+public class Teacher implements Serializable {
 
+    @Transient
+    private static final long serialVersionUID = 6808638857709406048L;
     @Id
     @ApiModelProperty(hidden = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @MapsId
     private User user;
 
@@ -33,7 +36,7 @@ public class Teacher {
 
     private Integer optional_num;//设置实际指导人数
 
-    @Max(value = 129,message = "最大指导人数不能超过{value}")
+    @Max(value = 129, message = "最大指导人数不能超过{value}")
     @PositiveOrZero
     private Integer ranges;//设置可以被选的范围
 

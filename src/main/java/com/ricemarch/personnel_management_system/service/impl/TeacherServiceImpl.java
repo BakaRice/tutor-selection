@@ -6,6 +6,9 @@ import com.ricemarch.personnel_management_system.repository.*;
 import com.ricemarch.personnel_management_system.service.ITeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +42,7 @@ public class TeacherServiceImpl implements ITeacherService {
 
     @Override
     @Transactional
+    @CachePut(cacheNames = "course", key = "#result.id")
     public Course add(Course course, int teacher_id) {
         //service层异常到controller层进行处理
         Teacher teacher = teacherRepository.findById(teacher_id)
@@ -50,6 +54,7 @@ public class TeacherServiceImpl implements ITeacherService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "courseList", key = "#teacher_id")
     public void remove(int course_id) {
         try {
             courseRepository.deleteById(course_id);
@@ -60,6 +65,7 @@ public class TeacherServiceImpl implements ITeacherService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "course", key = "#course_id")
     public int update(int course_id, double LowestScore, float weight) {
         int update = courseRepository.update(course_id, LowestScore, weight);
         if (update == 0)
@@ -69,6 +75,7 @@ public class TeacherServiceImpl implements ITeacherService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "course", key = "#course_id")
     public int update(int course_id, String name, double credit) {
         int update = courseRepository.update(course_id, credit, name);
         if (update == 0)
@@ -96,12 +103,14 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 
     @Override
+    @Cacheable(cacheNames = "course", key = "#course_id")
     public Course get(int course_id) {
         return courseRepository.findById(course_id)
                 .orElseThrow(() -> new CustomException("Failed to get course, could not find the specified course id:" + course_id));
     }
 
     @Override
+    @CachePut(cacheNames = "teahcer", key = "#teacher_id")
     public Teacher update(int teacher_id, int ranges) {
         Teacher teacher = teacherRepository.findById(teacher_id)
                 .orElseThrow(() -> new CustomException("Failed to update teacher, could not find the specified teacher id:" + teacher_id));
@@ -112,6 +121,7 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 
     @Override
+    @CachePut(cacheNames = "teahcer", key = "#teacher_id")
     public Teacher update(int teacher_id, String name, String introduction) {
         Teacher teacher = teacherRepository.findById(teacher_id)
                 .orElseThrow(() -> new CustomException("Failed to update teacher, could not find the specified teacher id:" + teacher_id));
@@ -159,6 +169,7 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 
     @Override
+    @Cacheable(cacheNames = "teahcer", key = "#teacher_id")
     public Teacher getTeacher(int teacher_id) {
         Teacher teacher = teacherRepository.find(teacher_id);
         if (teacher == null)

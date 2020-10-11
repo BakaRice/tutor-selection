@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @JsonIgnoreProperties({"teacher", "electives"})
-public class Student {
+public class Student implements Serializable {
+
+    @Transient
+    private static final long serialVersionUID = 2289358367758316736L;
 
     @Id
     @ApiModelProperty(hidden = true)

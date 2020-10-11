@@ -5,12 +5,15 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class Elective {
+public class Elective implements Serializable {
+    @Transient
+    private static final long serialVersionUID = -8894316047560440770L;
     //学生对应选课表
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
